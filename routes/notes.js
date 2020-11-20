@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
   });
 });
 
-//POST a new Note
+/* POST a new Note */
 router.post('/', function(req, res, next) {
 
     var notesdata; 
@@ -41,6 +41,7 @@ router.post('/', function(req, res, next) {
     });
 });
 
+/* EDIT a Note */
 router.put('/', function(req, res, next) {
 
     var notesdata; 
@@ -63,6 +64,7 @@ router.put('/', function(req, res, next) {
     });
 });
 
+/* DELETE a Note */
 router.delete('/', function(req, res, next) {
 
     var notesdata; 
