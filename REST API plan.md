@@ -12,7 +12,7 @@ API FUNCTIONS
 
 OBJECT DEFINITIONS
 
-    NOTES OBJECT:
+    notesdata:
 
         GET ALL NOTES:
 
