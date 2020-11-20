@@ -5,6 +5,7 @@ var id;
 
 const dataPath = "./data/notes.json";
 
+
 /* GET all Notes. */
 router.get('/', function(req, res, next) {
 
@@ -16,6 +17,20 @@ router.get('/', function(req, res, next) {
       res.send(JSON.parse(data));
   });
 });
+
+router.get('/:id', function(req, res, next) {
+
+    fs.readFile(dataPath, (err,data) =>{
+        if(err) {
+            throw err;
+        }
+        var id= req.params.id;
+        var notesdata = JSON.parse(data);
+
+        res.send(notesdata[id]);
+    });
+  });
+
 
 /* POST a new Note */
 router.post('/', function(req, res, next) {
@@ -29,6 +44,7 @@ router.post('/', function(req, res, next) {
         notesdata = JSON.parse(data);
         var newNotesId = Object.keys(notesdata).length + 1;
         notesdata[newNotesId] = JSON.parse(req.body.data);
+        notesdata[newNotesId].id= newNotesId;
         
         console.log(notesdata);
         fs.writeFile(dataPath, JSON.stringify(notesdata), err => {
@@ -41,17 +57,20 @@ router.post('/', function(req, res, next) {
     });
 });
 
+
 /* EDIT a Note */
-router.put('/', function(req, res, next) {
+router.put('/:id', function(req, res, next) {
 
     var notesdata; 
+    var id= req.params.id;
 
     fs.readFile(dataPath, (err,data) =>{
         if(err) {
             throw err;
         }
         notesdata = JSON.parse(data);
-        notesdata[req.body.id] = JSON.parse(req.body.data);
+        notesdata[id] = JSON.parse(req.body.data);
+        notesdata[id].id= id;
         
         console.log(notesdata);
         fs.writeFile(dataPath, JSON.stringify(notesdata), err => {
@@ -64,19 +83,20 @@ router.put('/', function(req, res, next) {
     });
 });
 
+
 /* DELETE a Note */
-router.delete('/', function(req, res, next) {
+router.delete('/:id', function(req, res, next) {
 
     var notesdata; 
     var notesdelete;
-    var id= req.body.id;
+    var id= req.params.id;
 
     fs.readFile(dataPath, (err,data) =>{
         if(err) {
             throw err;
         }
         notesdata = JSON.parse(data);
-        notesdata[req.body.id] = notesdelete;
+        notesdata[id] = notesdelete;
         
         console.log(notesdata);
         fs.writeFile(dataPath, JSON.stringify(notesdata), err => {
@@ -88,5 +108,6 @@ router.delete('/', function(req, res, next) {
         })
     });
 });
+
 
 module.exports = router;
