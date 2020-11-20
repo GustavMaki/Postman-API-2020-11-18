@@ -91,7 +91,7 @@ router.put('/:id', function(req, res, next) {
 
         if(notesdata[id]!= null){
             notesdata[id] = JSON.parse(req.body.data);
-            notesdata[id].id= id;
+            notesdata[id].id= JSON.parse(id);
             
             console.log(notesdata);
             fs.writeFile(dataPath, JSON.stringify(notesdata), err => {
