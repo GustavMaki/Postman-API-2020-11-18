@@ -2,8 +2,17 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs'); //filesystem
 var id;
+var errorCode;
+var errorDescription;
 
 const dataPath = "./data/notes.json";
+
+var errorObject= `
+{
+    "code": "${errorCode}",
+    "description": "${errorDescription}"
+}
+`;
 
 
 /* GET all Notes. */
@@ -27,7 +36,17 @@ router.get('/:id', function(req, res, next) {
         var id= req.params.id;
         var notesdata = JSON.parse(data);
 
-        res.send(notesdata[id]);
+        if(notesdata[id]!=null){
+            res.send(notesdata[id]);
+        }
+        else{
+            res.send(JSON.parse(`
+            {
+                "code": "404",
+                "description": "Requested note does not exist"
+            }`
+            ));
+        }
     });
   });
 
@@ -69,17 +88,29 @@ router.put('/:id', function(req, res, next) {
             throw err;
         }
         notesdata = JSON.parse(data);
-        notesdata[id] = JSON.parse(req.body.data);
-        notesdata[id].id= id;
-        
-        console.log(notesdata);
-        fs.writeFile(dataPath, JSON.stringify(notesdata), err => {
-            if (err) {
-              console.error(err)
-              return
-            }
-            res.status(200).send("Note updated!");
-        })
+
+        if(notesdata[id]!= null){
+            notesdata[id] = JSON.parse(req.body.data);
+            notesdata[id].id= id;
+            
+            console.log(notesdata);
+            fs.writeFile(dataPath, JSON.stringify(notesdata), err => {
+                if (err) {
+                  console.error(err)
+                  return
+                }
+                res.status(200).send("Note updated!");
+            })
+        }
+        else{
+            res.send(JSON.parse(`
+            {
+                "code": "404",
+                "description": "Requested note does not exist"
+            }`
+            ));
+        }
+
     });
 });
 
@@ -96,16 +127,29 @@ router.delete('/:id', function(req, res, next) {
             throw err;
         }
         notesdata = JSON.parse(data);
-        notesdata[id] = notesdelete;
         
-        console.log(notesdata);
-        fs.writeFile(dataPath, JSON.stringify(notesdata), err => {
-            if (err) {
-              console.error(err)
-              return
-            }
-            res.status(200).send("Note deleted!");
-        })
+
+        if(notesdata[id]!=null){
+            notesdata[id] = notesdelete;
+        
+            console.log(notesdata);
+            fs.writeFile(dataPath, JSON.stringify(notesdata), err => {
+                if (err) {
+                console.error(err)
+                return
+                }
+                res.status(200).send("Note deleted!");
+                
+            })
+        }
+        else{
+            res.send(JSON.parse(`
+            {
+                "code": "404",
+                "description": "Requested note does not exist"
+            }`
+            ));
+        }
     });
 });
 

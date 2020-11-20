@@ -38,7 +38,7 @@ OBJECT DEFINITIONS
             }
 
 
-    NOTES ERROR OBJECT:
+    errorObject:
 
         {
             "code": "ERROR CODE",
