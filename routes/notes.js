@@ -71,7 +71,7 @@ router.post('/', function(req, res, next) {
               console.error(err)
               return
             }
-            res.status(200).send("new Note added!");
+            res.status(200).send(notesdata[newNotesId]);
         })
     });
 });
@@ -99,7 +99,7 @@ router.put('/:id', function(req, res, next) {
                   console.error(err)
                   return
                 }
-                res.status(200).send("Note updated!");
+                res.status(200).send(notesdata[id]);
             })
         }
         else{
